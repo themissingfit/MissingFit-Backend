@@ -3,7 +3,7 @@ import {
   createDress,
   addRental,
   getAllDresses,
-} from "../controllers/dress.controller.js";
+} from "../controller/dress.controller.js";
 import { upload } from "../middlewares/multer.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
