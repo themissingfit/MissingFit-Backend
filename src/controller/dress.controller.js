@@ -1,6 +1,6 @@
 import { Dress } from "../models/dress.model.js";
 import { Rental } from "../models/rental.model.js";
-
+import cloudinary from "../config/cloudinary.js";
 export const createDress = async (req, res) => {
   try {
 
@@ -17,10 +17,13 @@ export const createDress = async (req, res) => {
       });
     }
 
-    const images = req.files.map((file) => ({
-      url: file.path,       // Cloudinary URL
-      publicId: file.filename,
+    const uploadedImages = await uploadDressImages(req.files);
+
+    const images = uploadedImages.map((img) => ({
+      url: img.secure_url,
+      public_id: img.public_id,
     }));
+
 
     const dress = await Dress.create({
       dressTitle,
@@ -41,6 +44,21 @@ export const createDress = async (req, res) => {
     });
   }
 };
+
+
+export const uploadDressImages = async (files) => {
+  const uploads = files.map((file) =>
+    cloudinary.uploader.upload(
+      `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
+      {
+        folder: "dresses",
+      }
+    )
+  );
+
+  return Promise.all(uploads);
+};
+
 
 export const addRental = async (req, res) => {
   try {

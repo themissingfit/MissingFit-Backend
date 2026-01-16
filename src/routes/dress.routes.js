@@ -1,7 +1,11 @@
 import express from "express";
-import upload from "../middlewares/upload.js"
-import { createDress, getAllDresses, addRental } from "../controller/dress.controller.js";
-import { verifyJwt } from "../middlewares/auth.middlewares.js";
+import {
+  createDress,
+  addRental,
+  getAllDresses,
+} from "../controllers/dress.controller.js";
+import { upload } from "../middlewares/multer.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
