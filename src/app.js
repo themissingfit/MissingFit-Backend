@@ -8,10 +8,22 @@ import dressRoutes from "./routes/dress.routes.js"
 const app = express();//just an instace of express app
 app.use(express.json());//the middle ware we needed
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:8080",
+  "https://missingfit-frontend.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "http://localhost:8080",
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
   })
 );
 
