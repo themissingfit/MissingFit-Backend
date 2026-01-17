@@ -26,7 +26,7 @@ const dressSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: ["Gown", "Lehenga", "Saree", "Anarkali"],
+      enum: ["Gown", "Lehenga", "Saree", "Suit","Sharara","Indo Western"],
       required: true,
     },
 
@@ -38,6 +38,11 @@ const dressSchema = new mongoose.Schema(
       enum: ["Available", "Rented"],
       default: "Available",
     },
+    currentRental: {
+    startDate: Date,
+    endDate: Date,
+    customerName: String,
+  },
   },
   { timestamps: true }
 );

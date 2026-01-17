@@ -21,7 +21,7 @@ export const createDress = async (req, res) => {
 
     const images = uploadedImages.map((img) => ({
       url: img.secure_url,
-      public_id: img.public_id,
+      publicId: img.public_id,
     }));
 
 
@@ -65,59 +65,52 @@ export const addRental = async (req, res) => {
     const { dressId, startDate, endDate, customerName } = req.body;
 
     if (!dressId || !startDate || !endDate) {
-      return res.status(400).json({
-        message: "Dress, start date and end date are required",
-      });
+      return res.status(400).json({ message: "Missing fields" });
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-      return res.status(400).json({
-        message: "Start date cannot be after end date",
-      });
+      return res.status(400).json({ message: "Invalid date range" });
     }
 
-    // 🔒 Check overlapping rentals
-    const conflict = await Rental.findOne({
-      dress: dressId,
-      status: "Active",
-      $or: [
-        {
-          startDate: { $lte: endDate },
-          endDate: { $gte: startDate },
+    // Update dress directly
+    const updatedDress = await Dress.findByIdAndUpdate(
+      dressId,
+      {
+        status: "Rented",
+        currentRental: {
+          startDate,
+          endDate,
+          customerName,
         },
-      ],
-    });
+      },
+      { new: true }
+    );
 
-    if (conflict) {
-      return res.status(409).json({
-        message: "Dress already rented for selected dates",
-      });
-    }
-
-    // Create rental
-    const rental = await Rental.create({
-      dress: dressId,
-      startDate,
-      endDate,
-      customerName,
-    });
-
-    // Update dress status
-    await Dress.findByIdAndUpdate(dressId, {
-      status: "Rented",
-    });
-
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      data: rental,
+      data: updatedDress,
     });
   } catch (error) {
     console.error("ADD RENTAL ERROR:", error);
-    return res.status(500).json({
-      message: "Failed to add rental",
-    });
+    res.status(500).json({ message: "Failed to add rental" });
   }
 };
+
+export const removeRental = async (req, res) => {
+  try {
+    const { dressId } = req.params;
+
+    await Dress.findByIdAndUpdate(dressId, {
+      status: "Available",
+      currentRental: null,
+    });
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(500).json({ message: "Failed to remove rental" });
+  }
+};
+
 
 export const getAllDresses = async (req, res) => {
   try {

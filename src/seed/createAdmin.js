@@ -7,10 +7,9 @@ dotenv.config();
 await mongoose.connect(process.env.MONGO_DB_URI);
 
 await User.create({
-  username: "sahil",
-  password: "Admin@123", // auto-hashed
-  fullName: "Sahil Kukreja",
-  userType: "staff"
+  username: "shatakshi",
+  password: "shatakshi@1709", // auto-hashed
+  fullName: "Shatakshi Tiwari",
 });
 
 console.log("Admin created");
