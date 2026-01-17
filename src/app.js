@@ -16,16 +16,16 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "https://missingfit.vercel.app",
+      "https://missingfit-frontend.vercel.app" // ✅ REAL frontend
+    ],
+    credentials: true,
   })
 );
+
 
 app.use(express.json({limit:"16kb"})) //to apply a limit to recieve json request
 app.use(express.urlencoded()) //it is used to take data from url and in url in between data there is special characters that's why it is used
