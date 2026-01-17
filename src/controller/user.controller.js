@@ -74,6 +74,8 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 
 export const getCurrentUser = (req, res) => {
+    console.log(req);
+    
   return res.status(200).json({
     success: true,
     data: req.user,
