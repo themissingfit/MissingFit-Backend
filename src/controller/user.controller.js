@@ -73,11 +73,13 @@ const generateAccessAndRefreshToken = async (userId) => {
 };
 
 
-export const getCurrentUser = asyncHandler(async (req, res) => {
-    return res.status(200).json(
-        new ApiResponse(200, req.user, "Current user fetched")
-    );
-});
+export const getCurrentUser = (req, res) => {
+  return res.status(200).json({
+    success: true,
+    data: req.user,
+  });
+};
+
 
 
 export const loginUser = asyncHandler(async (req, res) => {
